@@ -1,11 +1,19 @@
 import util.Input;
 
 public class ContactApplication {
-   static Input keyboard = new Input();
+    static Input keyboard = new Input();
 
     public static void main(String[] args) {
 
-        System.out.println(getMenuChoice());
+        boolean userContinues = true;
+
+
+        do {
+            userContinues = processMenuChoice(getMenuChoice());
+
+
+        } while (userContinues);
+
 
     }
 
@@ -20,7 +28,7 @@ public class ContactApplication {
 
     private static int getMenuChoice() {
 
-        return keyboard.getInt("1. View contacts.\n" +
+        return keyboard.getInt("\n\n1. View contacts.\n" +
                 "2. Add a new contact.\n" +
                 "3. Search a contact by name.\n" +
                 "4. Delete an existing contact.\n" +
@@ -28,4 +36,50 @@ public class ContactApplication {
                 "Enter an option (1, 2, 3, 4 or 5):", 1, 5);
 
     }
+
+    private static boolean processMenuChoice(int userChoice) {
+        switch (userChoice) {
+
+            case 1:
+
+                viewContacts();
+                return true;
+            case 2:
+
+                addNewContact();
+                return true;
+            case 3:
+
+                searchContactName();
+                return true;
+            case 4:
+
+                deleteContact();
+                return true;
+            case 5:
+
+                return false;
+            default:
+                System.out.println("userChoice = " + userChoice);
+                return true;
+        }
+    }
+
+    private static void viewContacts() {
+        System.out.println("viewContacts");
+    }
+
+    private static void addNewContact() {
+        System.out.println("addNewContact");
+    }
+
+    private static void searchContactName() {
+        System.out.println("searchContactName");
+
+    }
+
+    private static void deleteContact() {
+        System.out.println("deleteContact");
+    }
+
 }
