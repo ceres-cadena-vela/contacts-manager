@@ -4,7 +4,13 @@
 
 import util.Input;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ContactApplication {
     static Input keyboard = new Input();
@@ -12,9 +18,10 @@ public class ContactApplication {
 
     public static void main(String[] args) {
 
+        // Read the data from the text file
+
         boolean userContinues = true;
-
-
+        getData();
 
         do {
             userContinues = processMenuChoice(getMenuChoice());
@@ -22,7 +29,7 @@ public class ContactApplication {
 
         } while (userContinues);
 
-
+        // Write the list to the text file
     }
 
     // displayMenu // Print menu screen, return an int representing the user's option
@@ -108,4 +115,79 @@ public class ContactApplication {
         }
     }
 
+    private static void getData() {
+
+        String directory = "data";
+        String filename = "contacts.txt";
+        Path dataDirectory = Paths.get(directory);
+        Path dataFile = Paths.get(directory, filename);
+        Contact tempContact;
+        String name;
+        String number;
+
+        if (!Files.exists(dataDirectory)) {
+
+            try {
+                Files.createDirectories(dataDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//
+        }
+
+        if (!Files.exists(dataFile)) {
+            try {
+                Files.createFile(dataFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<String> lines = new ArrayList<>();
+
+        try {
+            lines = Files.readAllLines(dataFile);
+            for (String line : lines) {
+                name = line.substring(0, line.indexOf(',')).trim();
+                number = line.substring(line.indexOf(',') + 1).trim();
+                //System.out.println("name = " + name);
+                //System.out.println("number = " + number);
+                tempContact = new Contact(name, number);
+                contactList.put(tempContact.getKey(), tempContact);
+                //System.out.println("line = " + line);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void writeData(){
+
+        String directory = "data";
+        String filename = "contacts.txt";
+        Path dataDirectory = Paths.get(directory);
+        Path dataFile = Paths.get(directory, filename);
+        Contact tempContact;
+        String name;
+        String number;
+
+
+
+            List<String> contacts = new ArrayList<>();
+            // Build the array list from the has map
+            //Loop
+
+            try {
+                Files.write(dataFile,contacts);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+
+    }
+
 }
+
+
