@@ -1,6 +1,15 @@
 // Future Features List
-// * make sure number is at least 10 digits
-// * format number when displayed (xxx) xxx-xxxx
+
+// * make sure number is either 7 or 10 digits
+
+// * alphabetize contacts
+// * format contact name for consistency
+
+
+// * warn user when they try to enter contact with existing name
+// * format display list so that columns have equal width
+// * menu option where user can edit a contact
+
 
 import util.Input;
 
@@ -30,6 +39,7 @@ public class ContactApplication {
         } while (userContinues);
 
         // Write the list to the text file
+        writeData();
     }
 
     // displayMenu // Print menu screen, return an int representing the user's option
@@ -84,7 +94,7 @@ public class ContactApplication {
         System.out.println("Name | Phone number");
         System.out.println("---------------");
         for (String key : contactList.keySet()) {
-            System.out.println(contactList.get(key).getName() + " | " + contactList.get(key).getNumber());
+            System.out.println(contactList.get(key).getName() + " | " + contactList.get(key).getFormattedNumber());
         }
     }
 
@@ -150,12 +160,8 @@ public class ContactApplication {
             for (String line : lines) {
                 name = line.substring(0, line.indexOf(',')).trim();
                 number = line.substring(line.indexOf(',') + 1).trim();
-                //System.out.println("name = " + name);
-                //System.out.println("number = " + number);
                 tempContact = new Contact(name, number);
                 contactList.put(tempContact.getKey(), tempContact);
-                //System.out.println("line = " + line);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -163,7 +169,7 @@ public class ContactApplication {
 
     }
 
-    private static void writeData(){
+    private static void writeData() {
 
         String directory = "data";
         String filename = "contacts.txt";
@@ -172,18 +178,24 @@ public class ContactApplication {
         Contact tempContact;
         String name;
         String number;
+        String line;
 
 
+        List<String> contacts = new ArrayList<>();
+        // Build the array list from the hash map
 
-            List<String> contacts = new ArrayList<>();
-            // Build the array list from the has map
-            //Loop
+        for (String key : contactList.keySet()) {
+            name = contactList.get(key).getName();
+            number = contactList.get(key).getNumber();
+            line = name + ", " + number;
+            contacts.add(line);
+        }
 
-            try {
-                Files.write(dataFile,contacts);
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            Files.write(dataFile, contacts);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
