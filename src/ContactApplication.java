@@ -30,6 +30,7 @@ public class ContactApplication {
         } while (userContinues);
 
         // Write the list to the text file
+        writeData();
     }
 
     // displayMenu // Print menu screen, return an int representing the user's option
@@ -172,12 +173,22 @@ public class ContactApplication {
         Contact tempContact;
         String name;
         String number;
+        String line;
 
 
 
             List<String> contacts = new ArrayList<>();
             // Build the array list from the has map
             //Loop
+
+            for(String key : contactList.keySet()) {
+                name = contactList.get(key).getName();
+                number = contactList.get(key).getNumber();
+                line = name + ", " + number;
+                contacts.add(line);
+            }
+
+        System.out.println(contacts);
 
             try {
                 Files.write(dataFile,contacts);
