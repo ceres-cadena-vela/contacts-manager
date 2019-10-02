@@ -1,11 +1,19 @@
+// Future Features List
+// * make sure number is at least 10 digits
+// * format number when displayed (xxx) xxx-xxxx
+
 import util.Input;
+
+import java.util.HashMap;
 
 public class ContactApplication {
     static Input keyboard = new Input();
+    static HashMap<String, Contact> contactList = new HashMap<>();
 
     public static void main(String[] args) {
 
         boolean userContinues = true;
+
 
 
         do {
@@ -66,20 +74,38 @@ public class ContactApplication {
     }
 
     private static void viewContacts() {
-        System.out.println("viewContacts");
+        System.out.println("Name | Phone number");
+        System.out.println("---------------");
+        for (String key : contactList.keySet()) {
+            System.out.println(contactList.get(key).getName() + " | " + contactList.get(key).getNumber());
+        }
     }
 
     private static void addNewContact() {
-        System.out.println("addNewContact");
+        String newContactName = keyboard.getString("\nPlease enter the name of the new contact:");
+        String newContactNumber = keyboard.getString("Please enter the phone number of the new contact:");
+        Contact newContact = new Contact(newContactName, newContactNumber);
+        contactList.put(newContact.getKey(), newContact);
+        System.out.println(contactList.toString());
     }
 
     private static void searchContactName() {
-        System.out.println("searchContactName");
-
+        String searchName = keyboard.getString("Please enter the name of the contact you'd like to search for:").replace(" ", "").toLowerCase();
+        if (contactList.containsKey(searchName)) {
+            System.out.println(contactList.get(searchName).getName() + " | " + contactList.get(searchName).getNumber());
+        } else {
+            System.out.println("I'm sorry, I couldn't find that contact.");
+        }
     }
 
     private static void deleteContact() {
-        System.out.println("deleteContact");
+        String deleteName = keyboard.getString("Please enter the name of the contact you'd like to delete:").replace(" ", "").toLowerCase();
+        if (contactList.containsKey(deleteName)) {
+            System.out.println("Deleting this contact...");
+            contactList.remove(deleteName);
+        } else {
+            System.out.println("I'm sorry, I couldn't find that contact.");
+        }
     }
 
 }
