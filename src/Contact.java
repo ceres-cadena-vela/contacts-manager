@@ -7,5 +7,15 @@ public class Contact {
         this.number = number;
     }
 
-    // Add getters and setters later if needed
+    public String getKey() {
+        return this.name.replace(" ", "").toLowerCase();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getNumber() {
+        return this.number;
+    }
 }
