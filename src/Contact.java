@@ -31,7 +31,7 @@ public class Contact {
 
     public String getFormattedNumber() {
         if (this.number.length() == 7) {
-            return this.number.substring(0, 2) + "-" + this.number.substring(3);
+            return this.number.substring(0, 3) + "-" + this.number.substring(3);
         } else if (this.number.length() == 10) {
             return "(" + this.number.substring(0,3) + ") " + this.number.substring(3,6) + "-" + this.number.substring(6);
         } else {
