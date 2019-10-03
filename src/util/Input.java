@@ -209,5 +209,19 @@ public class Input {
 
     }
 
+
+    public static String getTitleCase(String inputString) {
+        String inputTitleCase = "";
+        String[] nameTitleCaseArray = inputString.split(" ");
+        for (String str : nameTitleCaseArray) {
+            if (inputTitleCase.length() > 0) {
+                inputTitleCase += " ";
+            }
+            inputTitleCase += str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+        }
+
+        return inputTitleCase;
+    }
+
 }
 

@@ -2,14 +2,8 @@
 
 // refactor to separate across more classes
 
-
-
 import util.Input;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class ContactApplication {
@@ -21,7 +15,10 @@ public class ContactApplication {
         // Read the data from the text file
 
         boolean userContinues;
-        getData();
+
+        EntryExitMessages.welcomeMessage();
+
+        ContactApplicationIO.getData(contactList);
 
         do {
             userContinues = processMenuChoice(getMenuChoice());
@@ -30,7 +27,8 @@ public class ContactApplication {
         } while (userContinues);
 
         // Write the list to the text file
-        writeData();
+        ContactApplicationIO.writeData(contactList);
+        EntryExitMessages.goodbyeMessage();
     }
 
 
@@ -91,26 +89,26 @@ public class ContactApplication {
         sortedContactList.putAll(contactList);
 
         // Display the TreeMap which is naturally sorted
-        System.out.printf("%-25s | %s\n","Name","Number");
+        System.out.printf("%-25s | %s\n", "Name", "Number");
         System.out.println("------------------------------------------");
         for (Map.Entry<String, Contact> entry : sortedContactList.entrySet())
             // System.out.println(contactList.get(entry.getKey()).getTitleCase() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
 
-            System.out.printf("%-25s | %s\n",contactList.get(entry.getKey()).getName() , contactList.get(entry.getKey()).getFormattedNumber());
+            System.out.printf("%-25s | %s\n", contactList.get(entry.getKey()).getName(), contactList.get(entry.getKey()).getFormattedNumber());
     }
 
     private static void addNewContact() {
         String newContactName = keyboard.getString("\nPlease enter the name of the new contact:");
         // Check if this contact already exists
         if (contactList.containsKey(newContactName.replace(" ", "").toLowerCase())) {
-            if(!keyboard.yesNo("A contact with that name already exists. Do you want to override the contact with new information?")) {
+            if (!keyboard.yesNo("A contact with that name already exists. Do you want to override the contact with new information?")) {
                 return;
             }
         }
         // Ask the user if they want the name in title case
-        if (!newContactName.equals(getTitleCase(newContactName))) {
-            if (keyboard.yesNo("Would you like to format the name to " + getTitleCase(newContactName) + "?")) {
-                newContactName = getTitleCase(newContactName);
+        if (!newContactName.equals(Input.getTitleCase(newContactName))) {
+            if (keyboard.yesNo("Would you like to format the name to " + Input.getTitleCase(newContactName) + "?")) {
+                newContactName = Input.getTitleCase(newContactName);
             }
         }
 
@@ -165,91 +163,6 @@ public class ContactApplication {
 
     }
 
-    private static void getData() {
-
-        String directory = "data";
-        String filename = "contacts.txt";
-        Path dataDirectory = Paths.get(directory);
-        Path dataFile = Paths.get(directory, filename);
-        Contact tempContact;
-        String name;
-        String number;
-
-        if (!Files.exists(dataDirectory)) {
-
-            try {
-                Files.createDirectories(dataDirectory);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//
-        }
-
-        if (!Files.exists(dataFile)) {
-            try {
-                Files.createFile(dataFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        List<String> lines = new ArrayList<>();
-
-        try {
-            lines = Files.readAllLines(dataFile);
-            for (String line : lines) {
-                name = line.substring(0, line.indexOf(',')).trim();
-                number = line.substring(line.indexOf(',') + 1).trim();
-                tempContact = new Contact(name, number);
-                contactList.put(tempContact.getKey(), tempContact);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private static void writeData() {
-
-        String directory = "data";
-        String filename = "contacts.txt";
-        Path dataFile = Paths.get(directory, filename);
-        String name;
-        String number;
-        String line;
-
-
-        List<String> contacts = new ArrayList<>();
-        // Build the array list from the hash map
-
-        for (String key : contactList.keySet()) {
-            name = contactList.get(key).getName();
-            number = contactList.get(key).getNumber();
-            line = name + ", " + number;
-            contacts.add(line);
-        }
-
-        try {
-            Files.write(dataFile, contacts);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private static String getTitleCase(String contactName) {
-        String nameTitleCase = "";
-        String[] nameTitleCaseArray = contactName.split(" ");
-        for (String str : nameTitleCaseArray) {
-            if (nameTitleCase.length() > 0) {
-                nameTitleCase += " ";
-            }
-            nameTitleCase += str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
-        }
-
-        return nameTitleCase;
-    }
 
 }
 
