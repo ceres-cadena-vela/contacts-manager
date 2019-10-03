@@ -2,7 +2,6 @@
 
 // * make sure number is either 7 or 10 digits
 
-// * alphabetize contacts
 // * format contact name for consistency
 
 
@@ -17,9 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class ContactApplication {
     static Input keyboard = new Input();
@@ -90,20 +87,40 @@ public class ContactApplication {
         }
     }
 
-    private static void viewContacts() {
+
+    public static void viewContacts() {
+
+        // Source:  https://www.geeksforgeeks.org/sorting-hashmap-according-key-value-java/
+
+        // TreeMap to store values of HashMap
+        // TreeMap automatically sorts the entries by key  value.
+        TreeMap<String, Contact> sortedContactList = new TreeMap<>();
+
+        // Copy all data from hashMap into TreeMap
+        sortedContactList.putAll(contactList);
+
+        // Display the TreeMap which is naturally sorted
         System.out.println("Name | Phone number");
         System.out.println("---------------");
-        for (String key : contactList.keySet()) {
-            System.out.println(contactList.get(key).getName() + " | " + contactList.get(key).getFormattedNumber());
-        }
+        for (Map.Entry<String, Contact> entry : sortedContactList.entrySet())
+           // System.out.println(contactList.get(entry.getKey()).getTitleCase() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
+
+           System.out.println(contactList.get(entry.getKey()).getName() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
     }
 
     private static void addNewContact() {
         String newContactName = keyboard.getString("\nPlease enter the name of the new contact:");
+        // Ask the user if they want the name in title case
+        if (!newContactName.equals(getTitleCase(newContactName))) {
+            if (keyboard.yesNo("Would you like to format the name to " + getTitleCase(newContactName) + "?")){
+                newContactName = getTitleCase(newContactName);
+            }
+        }
+
         String newContactNumber = keyboard.getString("Please enter the phone number of the new contact:");
         Contact newContact = new Contact(newContactName, newContactNumber);
         contactList.put(newContact.getKey(), newContact);
-        System.out.println(contactList.toString());
+       // System.out.println(contactList.toString());
     }
 
     private static void searchContactName() {
@@ -198,6 +215,17 @@ public class ContactApplication {
         }
 
 
+    }
+
+    private static String getTitleCase(String contactName){
+        String nameTitleCase = "";
+        String[] nameTitleCaseArray = contactName.split(" ");
+        for(String str:nameTitleCaseArray) {
+            if (nameTitleCase.length() > 0 ) {nameTitleCase += " ";}
+            nameTitleCase += str.substring(0,1).toUpperCase()+str.substring(1).toLowerCase();
+        }
+
+        return nameTitleCase;
     }
 
 }
