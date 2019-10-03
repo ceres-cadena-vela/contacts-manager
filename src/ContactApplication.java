@@ -1,7 +1,5 @@
 // Future Features List
 
-// * warn user when they try to enter contact with existing name
-
 // refactor to separate across more classes
 
 
@@ -103,6 +101,12 @@ public class ContactApplication {
 
     private static void addNewContact() {
         String newContactName = keyboard.getString("\nPlease enter the name of the new contact:");
+        // Check if this contact already exists
+        if (contactList.containsKey(newContactName.replace(" ", "").toLowerCase())) {
+            if(!keyboard.yesNo("A contact with that name already exists. Do you want to override the contact with new information?")) {
+                return;
+            }
+        }
         // Ask the user if they want the name in title case
         if (!newContactName.equals(getTitleCase(newContactName))) {
             if (keyboard.yesNo("Would you like to format the name to " + getTitleCase(newContactName) + "?")) {
