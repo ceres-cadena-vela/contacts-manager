@@ -1,7 +1,6 @@
 // Future Features List
 
 // * warn user when they try to enter contact with existing name
-// * format display list so that columns have equal width
 
 // refactor to separate across more classes
 
@@ -94,12 +93,12 @@ public class ContactApplication {
         sortedContactList.putAll(contactList);
 
         // Display the TreeMap which is naturally sorted
-        System.out.println("Name | Phone number");
-        System.out.println("---------------");
+        System.out.printf("%-25s | %s\n","Name","Number");
+        System.out.println("------------------------------------------");
         for (Map.Entry<String, Contact> entry : sortedContactList.entrySet())
             // System.out.println(contactList.get(entry.getKey()).getTitleCase() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
 
-            System.out.println(contactList.get(entry.getKey()).getName() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
+            System.out.printf("%-25s | %s\n",contactList.get(entry.getKey()).getName() , contactList.get(entry.getKey()).getFormattedNumber());
     }
 
     private static void addNewContact() {
