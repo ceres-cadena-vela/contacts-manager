@@ -40,7 +40,7 @@ public class Input {
         /**
          * The yesNo method should return true if the user enters y, yes, or variants thereof, and false otherwise.
          */
-        System.out.println("Please answer Y/N?");
+//        System.out.println("Please answer Y/N?");
         String answer = this.scanner.nextLine();
         return (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes"));
 
@@ -53,7 +53,7 @@ public class Input {
         if (message.trim().length() > 0) {
             System.out.println(message);
         } else {
-            System.out.println("Do you like movies?");
+            System.out.println("Please answer Y/N?");
         }
 
         return yesNo();

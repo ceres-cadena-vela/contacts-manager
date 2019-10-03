@@ -1,13 +1,10 @@
 // Future Features List
 
-// * make sure number is either 7 or 10 digits
-
-// * format contact name for consistency
-
-
 // * warn user when they try to enter contact with existing name
 // * format display list so that columns have equal width
-// * menu option where user can edit a contact
+
+// refactor to separate across more classes
+
 
 
 import util.Input;
@@ -26,7 +23,7 @@ public class ContactApplication {
 
         // Read the data from the text file
 
-        boolean userContinues = true;
+        boolean userContinues;
         getData();
 
         do {
@@ -39,23 +36,16 @@ public class ContactApplication {
         writeData();
     }
 
-    // displayMenu // Print menu screen, return an int representing the user's option
-    // processUserChoice ||  takes in an int rep. user option, processes with a switch statement
-    // 1. View contacts.
-    // 2. Add a new contact.
-    // 3. Search a contact by name.
-    // 4. Delete an existing contact.
-    // 5. Exit. // set looping variable equal to false
-    // Write to text file upon exiting application
 
     private static int getMenuChoice() {
 
         return keyboard.getInt("\n\n1. View contacts.\n" +
                 "2. Add a new contact.\n" +
                 "3. Search a contact by name.\n" +
-                "4. Delete an existing contact.\n" +
-                "5. Exit.\n" +
-                "Enter an option (1, 2, 3, 4 or 5):", 1, 5);
+                "4. Delete a contact.\n" +
+                "5. Edit a contact.\n" +
+                "6. Exit.\n" +
+                "\nEnter an option (1, 2, 3, 4, 5 or 6):", 1, 6);
 
     }
 
@@ -80,6 +70,10 @@ public class ContactApplication {
                 return true;
             case 5:
 
+                editContact();
+                return true;
+            case 6:
+
                 return false;
             default:
                 System.out.println("userChoice = " + userChoice);
@@ -103,16 +97,16 @@ public class ContactApplication {
         System.out.println("Name | Phone number");
         System.out.println("---------------");
         for (Map.Entry<String, Contact> entry : sortedContactList.entrySet())
-           // System.out.println(contactList.get(entry.getKey()).getTitleCase() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
+            // System.out.println(contactList.get(entry.getKey()).getTitleCase() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
 
-           System.out.println(contactList.get(entry.getKey()).getName() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
+            System.out.println(contactList.get(entry.getKey()).getName() + " | " + contactList.get(entry.getKey()).getFormattedNumber());
     }
 
     private static void addNewContact() {
         String newContactName = keyboard.getString("\nPlease enter the name of the new contact:");
         // Ask the user if they want the name in title case
         if (!newContactName.equals(getTitleCase(newContactName))) {
-            if (keyboard.yesNo("Would you like to format the name to " + getTitleCase(newContactName) + "?")){
+            if (keyboard.yesNo("Would you like to format the name to " + getTitleCase(newContactName) + "?")) {
                 newContactName = getTitleCase(newContactName);
             }
         }
@@ -120,7 +114,6 @@ public class ContactApplication {
         String newContactNumber = keyboard.getString("Please enter the phone number of the new contact:");
         Contact newContact = new Contact(newContactName, newContactNumber);
         contactList.put(newContact.getKey(), newContact);
-       // System.out.println(contactList.toString());
     }
 
     private static void searchContactName() {
@@ -140,6 +133,33 @@ public class ContactApplication {
         } else {
             System.out.println("I'm sorry, I couldn't find that contact.");
         }
+    }
+
+    private static void editContact() {
+        String searchName = keyboard.getString("Please enter the name of the contact you'd like to edit:").replace(" ", "").toLowerCase();
+        if (contactList.containsKey(searchName)) {
+            if (keyboard.yesNo("Would you like to edit information for the following contact? [ y | n ]\n" + contactList.get(searchName).getName() + " | " + contactList.get(searchName).getNumber())) {
+                int option = keyboard.getInt("\n1. Edit name\n" +
+                        "2. Edit phone number.\n" +
+                        "3. Return to Main Menu.\n" +
+                        "\nEnter an option (1, 2 or 3):", 1, 3);
+                switch (option) {
+                    case 1:
+                        contactList.get(searchName).setName(keyboard.getString("Enter the new name for the contact."));
+                        break;
+                    case 2:
+                        contactList.get(searchName).setNumber(keyboard.getString("Enter the new number for the contact."));
+                        break;
+                    case 3:
+                        break;
+                }
+            } else {
+                System.out.println("Returning to the main menu.");
+            }
+        } else {
+            System.out.println("I'm sorry, I couldn't find that contact.");
+        }
+
     }
 
     private static void getData() {
@@ -190,9 +210,7 @@ public class ContactApplication {
 
         String directory = "data";
         String filename = "contacts.txt";
-        Path dataDirectory = Paths.get(directory);
         Path dataFile = Paths.get(directory, filename);
-        Contact tempContact;
         String name;
         String number;
         String line;
@@ -217,12 +235,14 @@ public class ContactApplication {
 
     }
 
-    private static String getTitleCase(String contactName){
+    private static String getTitleCase(String contactName) {
         String nameTitleCase = "";
         String[] nameTitleCaseArray = contactName.split(" ");
-        for(String str:nameTitleCaseArray) {
-            if (nameTitleCase.length() > 0 ) {nameTitleCase += " ";}
-            nameTitleCase += str.substring(0,1).toUpperCase()+str.substring(1).toLowerCase();
+        for (String str : nameTitleCaseArray) {
+            if (nameTitleCase.length() > 0) {
+                nameTitleCase += " ";
+            }
+            nameTitleCase += str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
         }
 
         return nameTitleCase;

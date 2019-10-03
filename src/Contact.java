@@ -17,8 +17,16 @@ public class Contact {
         return this.name;
     }
 
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
     public String getNumber() {
         return this.number;
+    }
+
+    public void setNumber(String newNumber) {
+        this.number = newNumber;
     }
 
     public String getFormattedNumber() {
